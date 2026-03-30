@@ -1,0 +1,23 @@
+MODEL=qwen3-vl-30b-a3b-instruct
+BASE_URL=http://localhost:8888/v1
+API_KEY=vllm-openai-key
+
+jq -r '[.edit_instruction, .org_image_name] | @tsv' \
+data/text_instruction/nouhin_data_reviewer1_20260212.jsonl |
+head -n 20 |
+while IFS=$'\t' read -r edit_instruction org_img_file; do
+    org_img_stem="${org_img_file%.*}"
+    org_tikz_stem="${org_img_stem%%_org_*}"
+    org_tikz_file="data/org_tikz_code/${org_tikz_stem}.tex"
+    if [ ! -f "$org_tikz_file" ]; then
+        echo "skip: missing $org_tikz_file" >&2
+        continue
+    fi
+    original_tikz_code="$(cat "$org_tikz_file")"
+
+    python _vllm/reconstruction_images.py \
+        --model "$MODEL" \
+        --base_url "$BASE_URL" \
+        --api_key "$API_KEY" \
+        --org_img_file "$org_img_file"
+done
