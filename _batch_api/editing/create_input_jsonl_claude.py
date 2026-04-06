@@ -117,7 +117,6 @@ def build_request_line_for_visual_instruction_w_org_image(
         "custom_id": custom_id,
         "params": {
             "model": model,
-            "max_tokens": 8192,
             "system": system_instruction,
             "messages": [
                 {
@@ -183,7 +182,6 @@ def build_request_line_for_visual_instruction_w_org_image_w_org_tikz_code(
         "custom_id": custom_id,
         "params": {
             "model": model,
-            "max_tokens": 8192,
             "system": system_instruction,
             "messages": [
                 {
